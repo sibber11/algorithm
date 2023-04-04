@@ -6,7 +6,7 @@ using namespace std;
 #define V 5
 #define INF INT_MAX
 
-typedef pair<int, int> pi;
+typedef pair<int, pair<int, int > > pi;
 
 typedef priority_queue<pi, vector<pi>, greater<pi>> min_pq;
 
@@ -17,18 +17,6 @@ int graph[V][V] = {
 	{0, 19, 51, 0, 31},
 	{0, 42, 66, 31, 0}};
 min_pq pq;
-
-void printPQ()
-{
-	cout << endl;
-	while (!pq.empty())
-	{
-		pi top = pq.top();
-		cout << top.first << " " << top.second << endl;
-		pq.pop();
-	}
-	cout << endl;
-}
 
 int VISITED = (1<<V)-1;
 
@@ -50,23 +38,21 @@ int main()
 			}
 			if (graph[current_node][i])
 			{
-				pq.push(make_pair(graph[current_node][i], i));
+				pq.push(make_pair(graph[current_node][i], make_pair(i, current_node)));
 			}
 		}
 		pi top = pq.top();
-		while((visited&(1<<top.second)))
+		while((visited&(1<<top.second.first)))
 		{
-			// current_node = top.second;
 			pq.pop();
 			top = pq.top();
 		}
 		
-		visited = (visited|(1<<top.second));
+		visited = (visited|(1<<top.second.first));
 		cost += top.first;
-		cout << top.second+1 << " : " << top.first << endl;
+		cout << top.second.second+1 << "->" << top.second.first+1 << ":" << top.first << endl;
 		pq.pop();
-		current_node = top.second;
+		current_node = top.second.first;
 	}
 	cout << endl << cost << endl;
-	printPQ();
 }
